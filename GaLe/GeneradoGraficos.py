@@ -221,56 +221,62 @@ for i, (genre, data) in enumerate(sorted_genres):
 
 # --- Center slit line ---
 ax.axvline(0.5, color='white', alpha=0.15, linewidth=2, linestyle='--')
-legend_lines = ["GENRE PLAYTIME DETAILS\n"]
-for genre, data in sorted_genres:
+
+# --- Config ---
+# --- CONFIG ---
+legend_lines = []
+for genre, data in reversed(sorted_genres):  # Reverse the list
     main = int(data['total_main_time'])
     dlc = int(data['total_dlc_time'])
-    genre_upper = genre.upper().ljust(12)
-    main_text = f"{main}h main"
-    dlc_text = f"{dlc}h dlc"
+    legend_lines.append((genre.upper(), (main, dlc)))
 
-    # Use colored square markers
-    legend_lines.append(
-        f"{genre_upper}: "
-        + f"■ {main_text}  "
-        + f"■ {dlc_text}"
-    )
+# --- Split into Three Sections ---
+# First 5 items - Top Left
+top_left = legend_lines[:5]
+# Next 3 items - Center Right
+center_right = legend_lines[5:11]
+# Remaining items - Bottom Right
+bottom_right = legend_lines[11:]
 
-# Join all lines into a single string
-legend_text = "\n".join(legend_lines)
+# --- Layout Settings ---
+line_height = 0.045
+top_left_x = -0.1  # Far left, top section
+center_right_x = 1.2  # Far right, center section
+bottom_right_x = 1.05  # Far right, bottom section
+y_start_top_left = 0.90  # Top section starts high
+y_start_center_right = 0.6  # Center-right section starts in the middle
+y_start_bottom_right = 0.2  # Bottom-right section starts low
 
-# Text box properties
-props = dict(boxstyle='round,pad=0.6', facecolor='black', alpha=0.75, edgecolor='white')
-
-# Display the text box
-text_box = ax.text(1.05, 0.5, legend_text, transform=ax.transAxes,
-                   fontsize=12, va='center', ha='left',
-                   fontname='DejaVu Sans',
-                   color='white',
-                   path_effects=[pe.withStroke(linewidth=1, foreground='black')],
-                   bbox=props, zorder=10)
-
-# Manually color the "■" symbols after plotting
-renderer = fig.canvas.get_renderer()
-for i, line in enumerate(legend_lines[1:]):
-    t = ax.text(1.05, 0.5 - i * 0.045, "", transform=ax.transAxes,
-                fontsize=12, va='center', ha='left',
-                fontname='DejaVu Sans',
+# --- Function to draw one column ---
+def draw_column(data, start_x, ax, start_y, reverse=False):
+    for i, (label, (main, dlc)) in enumerate(data):
+        y = start_y - i * line_height if not reverse else start_y + i * line_height
+        ax.text(start_x, y, f"{label}:", transform=ax.transAxes,
+                fontsize=11, va='center', ha='left',
+                fontname='DejaVu Sans', color='white',
                 path_effects=[pe.withStroke(linewidth=1, foreground='black')],
-                bbox=None, zorder=11)
-    
-    # Add colored markers separately
-    t.set_text(f"{line[:13]}: ")
-    t2 = ax.text(1.22, 0.5 - i * 0.045, f"■", color=main_color, transform=ax.transAxes,
-                 fontsize=14, va='center', ha='left')
-    t3 = ax.text(1.26, 0.5 - i * 0.045, f"{main}h main", color='white', transform=ax.transAxes,
-                 fontsize=12, va='center', ha='left')
-    t4 = ax.text(1.40, 0.5 - i * 0.045, f"■", color=dlc_color, transform=ax.transAxes,
-                 fontsize=14, va='center', ha='left')
-    t5 = ax.text(1.44, 0.5 - i * 0.045, f"{dlc}h dlc", color='white', transform=ax.transAxes,
-                 fontsize=12, va='center', ha='left')
+                bbox=dict(facecolor='none', edgecolor='none', boxstyle="round,pad=0.5"))  # No background box
+        ax.text(start_x + 0.18, y, "■", color=main_color, transform=ax.transAxes,
+                fontsize=13, va='center', ha='left',
+                bbox=dict(facecolor='none', edgecolor='none', boxstyle="round,pad=0.5"))
+        ax.text(start_x + 0.21, y, f"{main}h", color='white', transform=ax.transAxes,
+                fontsize=11, va='center', ha='left',
+                bbox=dict(facecolor='none', edgecolor='none', boxstyle="round,pad=0.5"))
+        ax.text(start_x + 0.31, y, "■", color=dlc_color, transform=ax.transAxes,
+                fontsize=13, va='center', ha='left',
+                bbox=dict(facecolor='none', edgecolor='none', boxstyle="round,pad=0.5"))
+        ax.text(start_x + 0.34, y, f"{dlc}h", color='white', transform=ax.transAxes,
+                fontsize=11, va='center', ha='left',
+                bbox=dict(facecolor='none', edgecolor='none', boxstyle="round,pad=0.5"))
 
-# Tight layout and show
+# --- Draw the Three Columns ---
+draw_column(top_left, top_left_x, ax, y_start_top_left)  # Top-left reversed for top-down order
+draw_column(center_right, center_right_x, ax, y_start_center_right)
+draw_column(bottom_right, bottom_right_x, ax, y_start_bottom_right)  # Bottom-right reversed for top-down order
+
+# --- Adjust layout so bars don't change size ---
+plt.subplots_adjust(left=0.05, right=0.85, top=0.95, bottom=0.05)  # Modify margins to give space for legend without affecting graph
+
 plt.tight_layout()
 plt.show()
 
