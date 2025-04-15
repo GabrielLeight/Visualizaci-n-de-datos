@@ -32,26 +32,25 @@ def limpiar_tags(tags):
     for original, reemplazo in reemplazos.items():
         tags = re.sub(original, reemplazo, tags)
 
-    # Separar y limpiar (conservando guiones bajos como parte del tag)
+    # Separar y limpiar
     tag_list = re.split(r"\s*[,\|]\s*", tags.strip())
     
     tags_limpios = []
     for tag in tag_list:
         tag = tag.strip()
         if tag:
-            # Reemplazar espacios restantes dentro del tag por guiones bajos
             tag = tag.replace(" ", "_")
             tag = tag.replace("-", "_")
             if tag not in tags_limpios:
                 tags_limpios.append(tag)
     
-    return tags_limpios  # Devuelve una lista de tags individuales
+    return tags_limpios
 
 df = pd.read_csv("RAWG.io_xbox_games_with_devs.csv")
 
 df['cleaned_tags'] = df['tags'].apply(limpiar_tags)
 
-# Para WordCloud (une los tags con espacios)
+# Para WordCloud
 all_tags = " ".join(" ".join(tags) for tags in df['cleaned_tags'])
 wordcloud = WordCloud(
     width=800,
