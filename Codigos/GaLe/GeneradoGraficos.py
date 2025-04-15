@@ -9,7 +9,7 @@ from matplotlib.patches import FancyBboxPatch
 import matplotlib.patheffects as pe
 import random
 # Load the JSON lines file
-file_path = "../Fuentes/hltb.jsonlines"
+file_path = "Fuentes/hltb.jsonlines"
 with open(file_path, "r", encoding="utf-8") as file:
     data = [json.loads(line) for line in file]
 
