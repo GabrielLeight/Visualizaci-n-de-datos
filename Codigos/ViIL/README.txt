@@ -1,0 +1,3 @@
+- Para que el codigo funcione correctamente, el archivo "RAWG.io_xbox_games_with_devs.csv" debe estar en el mismo directorio que "tags_and_plataforms_grafs.py".
+- Una vez cumplido este requisito, solamente se debe ejecutar el codigo para que se muestren los gráficos.
+- Primero se verá el gráfico de WordCloud en pantalla y al cerrarlo, emergerá la gráfica de distribucion de violín.
