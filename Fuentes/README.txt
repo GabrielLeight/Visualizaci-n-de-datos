@@ -1,0 +1,1 @@
+- Los datos de "RAWG.io_xbox_games_with_devs.csv" fueron obtenidos por la API de RAWG.io (https://rawg.io/apidocs), una base de datos de videojuegos. 
