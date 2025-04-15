@@ -9,7 +9,7 @@ from matplotlib.patches import FancyBboxPatch
 import matplotlib.patheffects as pe
 import random
 # Load the JSON lines file
-file_path = "hltb.jsonlines"
+file_path = "../Fuentes/hltb.jsonlines"
 with open(file_path, "r", encoding="utf-8") as file:
     data = [json.loads(line) for line in file]
 
@@ -251,6 +251,11 @@ y_start_bottom_right = 0.2  # Bottom-right section starts low
 def draw_column(data, start_x, ax, start_y, reverse=False):
     for i, (label, (main, dlc)) in enumerate(data):
         y = start_y - i * line_height if not reverse else start_y + i * line_height
+        ax.text(top_left_x, y_start_top_left + 0.05, "Legend: blue playtime, red dlcplaytime", transform=ax.transAxes,
+        fontsize=12, fontweight='bold', ha='left', va='center',
+        fontname='DejaVu Sans', color='white',
+        path_effects=[pe.withStroke(linewidth=1, foreground='black')],
+        bbox=dict(facecolor='none', edgecolor='none', boxstyle="round,pad=0.5"))
         ax.text(start_x, y, f"{label}:", transform=ax.transAxes,
                 fontsize=11, va='center', ha='left',
                 fontname='DejaVu Sans', color='white',
