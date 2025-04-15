@@ -4,7 +4,7 @@ import seaborn as sns
 import squarify  # <- Asegúrate de tenerlo instalado
 
 # Leer el CSV
-df = pd.read_csv("../RAWG.io_xbox_games_with_devs.csv")
+df = pd.read_csv("RAWG.io_xbox_games_with_devs.csv")
 
 # Filtrar columnas necesarias
 df = df[['esrb_rating', 'rating']].dropna()
